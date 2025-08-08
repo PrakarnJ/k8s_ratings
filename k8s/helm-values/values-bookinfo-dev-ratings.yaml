@@ -1,0 +1,20 @@
+ratings:
+  namespace: bookinfo-dev
+  image: asia.gcr.io/consummate-sled-468012-v8/bookinfo-ratings
+  tag: dev
+  replicas: 1
+  imagePullSecrets: registry-bookinfo
+  port: 9080
+  healthCheckPath: "/health"
+  mongodbPasswordExistingSecret: bookinfo-dev-ratings-mongodb-secret
+ingress:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+  ingressClassName: nginx
+  host: 34.143.182.71.nip.io
+  path: "/ratings(/|$)(.*)"
+  serviceType: ClusterIP
+extraEnv:
+  SERVICE_VERSION: v2
+  MONGO_DB_URL: mongodb://bookinfo-dev-ratings-mongodb:27017/ratings-dev
+  MONGO_DB_USERNAME: ratings-dev
